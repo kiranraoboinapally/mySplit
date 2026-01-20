@@ -25,12 +25,12 @@ const Dashboard = () => {
         const catMap = {};
 
         data.forEach(exp => {
-            total += exp.totalAmount;
+            total += Number(exp.TotalAmount || 0);
 
             // Category aggregation
-            const catName = exp.category ? exp.category.name : 'Uncategorized';
+            const catName = exp.Category ? exp.Category.name : 'Uncategorized';
             if (!catMap[catName]) catMap[catName] = 0;
-            catMap[catName] += exp.totalAmount;
+            catMap[catName] += Number(exp.TotalAmount || 0);
         });
 
         setTotals({ daily: total / 30, monthly: total }); // Simplified logic for demo
@@ -106,11 +106,13 @@ const Dashboard = () => {
                                 {expenses.map(exp => (
                                     <tr key={exp.id} className="border-b">
                                         <td className="p-2">
-                                            <div className="font-bold">{exp.itemName}</div>
-                                            <div className="text-xs text-gray-500">{exp.quantity} {exp.unit}</div>
+                                            <div className="font-bold">{exp.ItemName}</div>
+                                            <div className="text-xs text-gray-500">{exp.Quantity} {exp.Unit}</div>
                                         </td>
-                                        <td className="p-2">{exp.date}</td>
-                                        <td className="p-2 font-bold text-red-500">-${exp.totalAmount.toFixed(2)}</td>
+                                        <td className="p-2">{exp.Date}</td>
+                                        <td className="p-2 font-bold text-red-500">
+                                            -${Number(exp.TotalAmount || 0).toFixed(2)}
+                                        </td>
                                         <td className="p-2">
                                             <button onClick={() => handleDelete(exp.id)} className="text-red-500 hover:text-red-700">Delete</button>
                                         </td>

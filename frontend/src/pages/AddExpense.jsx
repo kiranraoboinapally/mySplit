@@ -36,13 +36,25 @@ const AddExpense = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         const payload = {
-            ...formData,
-            category: { id: formData.categoryId }
+            itemName: formData.itemName,
+            quantity: formData.quantity ? parseFloat(formData.quantity) : null,
+            unit: formData.unit,
+            pricePerUnit: formData.pricePerUnit ? parseFloat(formData.pricePerUnit) : null,
+            totalAmount: parseFloat(formData.totalAmount),
+            date: formData.date
+                ? new Date(formData.date).toISOString()
+                : null,
+            notes: formData.notes,
+            category: { id: parseInt(formData.categoryId) }
         };
+
+        console.log("Sending payload:", payload);
         await ExpenseService.createExpense(payload);
         navigate('/');
     };
+
 
     return (
         <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
