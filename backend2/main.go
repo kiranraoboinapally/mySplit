@@ -53,6 +53,9 @@ func main() {
 		// Shared Expenses
 		protected.GET("/shared/owed", controllers.GetOwedByMe)
 		protected.GET("/shared/lended", controllers.GetLendedByMe)
+
+		// Analytics
+		protected.GET("/reports/spending", controllers.GetSpendingAnalysis)
 	}
 
 	port := os.Getenv("PORT")

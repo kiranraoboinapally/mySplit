@@ -23,6 +23,8 @@ func CreateExpense(c *gin.Context) {
 		expense.Date = time.Now()
 	}
 
+	// Validation for mandatory fields handled by GORM not null constraint, but good to check specifics if needed
+
 	if err := config.DB.Create(&expense).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -45,8 +47,11 @@ func GetExpenses(c *gin.Context) {
 }
 
 func DeleteExpense(c *gin.Context) {
+	userID, _ := c.Get("user_id")
 	id := c.Param("id")
-	if err := config.DB.Delete(&models.Expense{}, id).Error; err != nil {
+
+	// Ensure the expense belongs to the user
+	if err := config.DB.Where("id = ? AND user_id = ?", id, userID).Delete(&models.Expense{}).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
