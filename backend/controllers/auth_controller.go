@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kiranraoboinapally/mySplit/backend2/config"
-	"github.com/kiranraoboinapally/mySplit/backend2/models"
-	"github.com/kiranraoboinapally/mySplit/backend2/utils"
+	"github.com/kiranraoboinapally/mySplit/backend/config"
+	"github.com/kiranraoboinapally/mySplit/backend/models"
+	"github.com/kiranraoboinapally/mySplit/backend/utils"
 )
 
 type RegisterInput struct {

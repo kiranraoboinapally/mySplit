@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/kiranraoboinapally/mySplit/backend2/models"
+	"github.com/kiranraoboinapally/mySplit/backend/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -45,6 +45,9 @@ func ConnectDatabase() {
 	DB = database
 	fmt.Println("Database connection successfully established")
 	
-	// Auto Migrate
-	database.AutoMigrate(&models.User{}, &models.Category{}, &models.Expense{}, &models.SharedExpense{})
+	// Auto Migrate - Order matters! Categories must exist before expenses
+	database.AutoMigrate(&models.User{})
+	database.AutoMigrate(&models.Category{})
+	database.AutoMigrate(&models.Expense{})
+	database.AutoMigrate(&models.SharedExpense{})
 }

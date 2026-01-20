@@ -24,10 +24,7 @@ const Login = () => {
         try {
             const res = await ExpenseService.login(formData.email, formData.password);
             localStorage.setItem('user', JSON.stringify(res.data));
-            // Small delay to show success
-            setTimeout(() => {
-                navigate('/');
-            }, 300);
+            navigate('/');
         } catch (err) {
             setLoading(false);
             setError(err.response?.data?.error || 'Invalid credentials. Please try again.');

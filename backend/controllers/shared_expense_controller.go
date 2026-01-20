@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kiranraoboinapally/mySplit/backend2/config"
-	"github.com/kiranraoboinapally/mySplit/backend2/models"
+	"github.com/kiranraoboinapally/mySplit/backend/config"
+	"github.com/kiranraoboinapally/mySplit/backend/models"
 )
 
 func GetOwedByMe(c *gin.Context) {

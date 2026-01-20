@@ -1,0 +1,688 @@
+---
+
+# **📊 Real-Life Expense Taxonomy (Complete)**
+
+| **Broad Category**            | **Subcategory**                | **Examples / Notes**                                     |
+| ----------------------------- | ------------------------------ | -------------------------------------------------------- |
+| **Food & Drinks**             | Groceries                      | Supermarket, Vegetables, Fruits, Milk, Bread             |
+|                               | Restaurants / Cafes / Takeout  | Lunch, Dinner, Fast food, Coffee shops                   |
+|                               | Coffee / Snacks                | Tea, Coffee, Pastries, Street snacks                     |
+|                               | Alcohol / Drinks               | Beer, Wine, Spirits                                      |
+|                               | Delivery / Online Orders       | Swiggy, UberEats, Zomato                                 |
+| **Transport / Travel**        | Fuel / Gas                     | Petrol, Diesel                                           |
+|                               | Public Transport               | Bus, Metro, Train tickets                                |
+|                               | Ride-hailing / Taxi            | Uber, Ola, Lyft, Grab                                    |
+|                               | Vehicle Maintenance            | Servicing, Spare parts, Washing                          |
+|                               | Parking / Toll                 | Toll gates, Parking fees                                 |
+|                               | Flights / Trips                | Domestic, International                                  |
+| **Housing / Utilities**       | Rent / Mortgage                | Monthly house rent, Home loan EMI                        |
+|                               | Electricity / Gas / Water      | Monthly utility bills                                    |
+|                               | Internet / TV / Phone          | Broadband, Mobile recharge, Streaming services           |
+|                               | Repairs / Maintenance          | Plumbing, Electrical fixes, Furniture repairs            |
+| **Health & Fitness**          | Doctor Visits / Medication     | Consultation, Prescription drugs                         |
+|                               | Gym / Fitness Classes          | Gym subscription, Yoga classes                           |
+|                               | Health Insurance / Supplements | Insurance premium, Vitamins, Protein                     |
+|                               | Therapy / Mental Health        | Counseling, Therapy sessions                             |
+| **Entertainment & Leisure**   | Movies / Streaming             | Netflix, Amazon Prime, Cinema tickets                    |
+|                               | Games / Apps / Online services | Mobile apps, Gaming subscriptions                        |
+|                               | Hobbies / Sports               | Musical instruments, Sports equipment, Painting supplies |
+|                               | Events / Concerts / Trips      | Tickets, Entry fees, Weekend trips                       |
+| **Education / Learning**      | Courses / Online Learning      | Udemy, Coursera, Skillshare                              |
+|                               | Books / Stationery             | Novels, Textbooks, Pens                                  |
+|                               | Workshops / Seminars           | Paid workshops, Conferences                              |
+|                               | Certifications / Exams         | IELTS, PMP, TOEFL, Professional courses                  |
+| **Shopping / Personal Items** | Clothes / Shoes / Accessories  | T-shirts, Shoes, Bags, Jewelry                           |
+|                               | Electronics / Gadgets          | Phone, Laptop, Headphones                                |
+|                               | Home Décor / Furniture         | Curtains, Furniture, Lamps                               |
+|                               | Personal Care / Cosmetics      | Shampoo, Makeup, Haircut                                 |
+| **Finance / Investments**     | Loan EMIs / Credit Card        | Credit card bill, Car loan, Personal loan                |
+|                               | Savings / Investments          | Mutual funds, Stocks, Retirement                         |
+|                               | Insurance Premiums             | Life insurance, Health insurance                         |
+|                               | Taxes                          | Income tax, Property tax                                 |
+| **Gifts / Donations / Misc**  | Gifts / Celebrations           | Birthdays, Weddings, Festivals                           |
+|                               | Donations / Charity            | NGO donations, Tithes                                    |
+|                               | Misc / Unexpected Expenses     | Lost items, Penalties, Miscellaneous small costs         |
+| **Recurring Subscriptions**   | Software / Tools               | Adobe, Canva, Notion, Office 365                         |
+|                               | News / Magazines               | Newspapers, Magazines, Online subscriptions              |
+| **Travel & Vacation**         | Hotels / Accommodation         | Booking.com, Airbnb, Hostels                             |
+|                               | Transportation                 | Flights, Car rental, Bus tickets                         |
+|                               | Food & Dining                  | Restaurants while traveling                              |
+|                               | Activities / Sightseeing       | Tours, Museums, Parks                                    |
+| **Miscellaneous / Other**     | Pet Care                       | Pet food, Vet visits, Grooming                           |
+|                               | Gifts & Celebrations           | Party supplies, Gifts for friends/family                 |
+|                               | Emergencies / Unexpected Costs | Hospital emergencies, Accidental expenses                |
+|                               | Taxes / Fees                   | Government charges, Service fees                         |
+
+---
+
+### ✅ Key Tips for Using This
+
+1. Start with **broad categories + top subcategories**. Don’t overcomplicate at first.
+2. Track every expense under **the most logical subcategory**.
+3. Add new subcategories over time if you notice repeated spending in a “Misc” bucket.
+4. **Shared expenses**: just add a “Split with X” flag for roommates/friends.
+5. **Recurring expenses**: subscriptions, rent, EMI, insurance should have reminders.
+
+---
+
+
+CREATE TABLE categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    parent_id INT DEFAULT NULL,
+    level INT DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (parent_id) REFERENCES categories(id) ON DELETE CASCADE
+);
+
+-- =========================================
+-- 2. ITEMS TABLE (OPTIONAL)
+-- =========================================
+CREATE TABLE items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    category_id INT NOT NULL,
+    unit VARCHAR(50),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+);
+
+
+
+INSERT INTO categories (id, name, parent_id, level) VALUES
+(1, 'Dairy & Eggs', NULL, 0),
+(2, 'Fruits', NULL, 0),
+(3, 'Vegetables', NULL, 0),
+(4, 'Staples & Pantry', NULL, 0),
+(5, 'Snacks & Packaged Food', NULL, 0),
+(6, 'Meat, Seafood & Protein', NULL, 0),
+(7, 'Drinks', NULL, 0),
+(8, 'Restaurants / Cafes / Takeout', NULL, 0),
+(9, 'Special / Miscellaneous', NULL, 0);
+
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Milk', 1, 1),
+('Cheese', 1, 1),
+('Yogurt / Dahi / Greek Yogurt', 1, 1),
+('Butter / Ghee / Margarine', 1, 1),
+('Cream / Condensed Milk', 1, 1),
+('Eggs', 1, 1);
+
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Cow Milk', (SELECT id FROM categories WHERE name="Milk"), 2),
+('Buffalo Milk', (SELECT id FROM categories WHERE name="Milk"), 2),
+('Almond Milk', (SELECT id FROM categories WHERE name="Milk"), 2),
+('Soy Milk', (SELECT id FROM categories WHERE name="Milk"), 2),
+('Oat Milk', (SELECT id FROM categories WHERE name="Milk"), 2);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Cheddar', (SELECT id FROM categories WHERE name="Cheese"), 2),
+('Mozzarella', (SELECT id FROM categories WHERE name="Cheese"), 2),
+('Paneer', (SELECT id FROM categories WHERE name="Cheese"), 2),
+('Feta', (SELECT id FROM categories WHERE name="Cheese"), 2),
+('Gouda', (SELECT id FROM categories WHERE name="Cheese"), 2);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Common Fruits', 2, 1),
+('Berries', 2, 1),
+('Citrus', 2, 1),
+('Tropical', 2, 1),
+('Exotic', 2, 1);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Apple', (SELECT id FROM categories WHERE name="Common Fruits"), 2),
+('Banana', (SELECT id FROM categories WHERE name="Common Fruits"), 2),
+('Orange', (SELECT id FROM categories WHERE name="Common Fruits"), 2),
+('Grapes', (SELECT id FROM categories WHERE name="Common Fruits"), 2),
+('Mango', (SELECT id FROM categories WHERE name="Common Fruits"), 2),
+('Pear', (SELECT id FROM categories WHERE name="Common Fruits"), 2);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Strawberry', (SELECT id FROM categories WHERE name="Berries"), 2),
+('Blueberry', (SELECT id FROM categories WHERE name="Berries"), 2),
+('Raspberry', (SELECT id FROM categories WHERE name="Berries"), 2),
+('Blackberry', (SELECT id FROM categories WHERE name="Berries"), 2);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Lemon', (SELECT id FROM categories WHERE name="Citrus"), 2),
+('Lime', (SELECT id FROM categories WHERE name="Citrus"), 2),
+('Grapefruit', (SELECT id FROM categories WHERE name="Citrus"), 2);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Papaya', (SELECT id FROM categories WHERE name="Tropical"), 2),
+('Pineapple', (SELECT id FROM categories WHERE name="Tropical"), 2),
+('Watermelon', (SELECT id FROM categories WHERE name="Tropical"), 2),
+('Guava', (SELECT id FROM categories WHERE name="Tropical"), 2);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Dragon Fruit', (SELECT id FROM categories WHERE name="Exotic"), 2),
+('Kiwi', (SELECT id FROM categories WHERE name="Exotic"), 2),
+('Pomegranate', (SELECT id FROM categories WHERE name="Exotic"), 2),
+('Passion Fruit', (SELECT id FROM categories WHERE name="Exotic"), 2),
+('Starfruit', (SELECT id FROM categories WHERE name="Exotic"), 2);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Leafy Greens', 3, 1),
+('Root Vegetables', 3, 1),
+('Cruciferous', 3, 1),
+('Others', 3, 1);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Spinach', (SELECT id FROM categories WHERE name="Leafy Greens"), 2),
+('Lettuce', (SELECT id FROM categories WHERE name="Leafy Greens"), 2),
+('Kale', (SELECT id FROM categories WHERE name="Leafy Greens"), 2),
+('Mint', (SELECT id FROM categories WHERE name="Leafy Greens"), 2),
+('Coriander', (SELECT id FROM categories WHERE name="Leafy Greens"), 2),
+('Fenugreek', (SELECT id FROM categories WHERE name="Leafy Greens"), 2);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Carrot', (SELECT id FROM categories WHERE name="Root Vegetables"), 2),
+('Potato', (SELECT id FROM categories WHERE name="Root Vegetables"), 2),
+('Beetroot', (SELECT id FROM categories WHERE name="Root Vegetables"), 2),
+('Radish', (SELECT id FROM categories WHERE name="Root Vegetables"), 2),
+('Turnip', (SELECT id FROM categories WHERE name="Root Vegetables"), 2),
+('Ginger', (SELECT id FROM categories WHERE name="Root Vegetables"), 2),
+('Garlic', (SELECT id FROM categories WHERE name="Root Vegetables"), 2);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Broccoli', (SELECT id FROM categories WHERE name="Cruciferous"), 2),
+('Cauliflower', (SELECT id FROM categories WHERE name="Cruciferous"), 2),
+('Cabbage', (SELECT id FROM categories WHERE name="Cruciferous"), 2),
+('Brussels Sprouts', (SELECT id FROM categories WHERE name="Cruciferous"), 2);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Tomato', (SELECT id FROM categories WHERE name="Others"), 2),
+('Cucumber', (SELECT id FROM categories WHERE name="Others"), 2),
+('Capsicum', (SELECT id FROM categories WHERE name="Others"), 2),
+('Eggplant', (SELECT id FROM categories WHERE name="Others"), 2),
+('Pumpkin', (SELECT id FROM categories WHERE name="Others"), 2),
+('Zucchini', (SELECT id FROM categories WHERE name="Others"), 2);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Chips / Namkeen', 5, 1),
+('Biscuits / Cookies / Crackers', 5, 1),
+('Chocolates / Candy / Sweets / Mithai', 5, 1),
+('Instant Noodles / Pasta / Ready-to-eat Meals', 5, 1),
+('Nuts / Seeds / Dry Fruits', 5, 1),
+('Breakfast Cereals / Granola Bars', 5, 1);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Non-Alcoholic', 7, 1),
+('Alcoholic', 7, 1);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Water', (SELECT id FROM categories WHERE name="Non-Alcoholic"), 2),
+('Juices', (SELECT id FROM categories WHERE name="Non-Alcoholic"), 2),
+('Tea', (SELECT id FROM categories WHERE name="Non-Alcoholic"), 2),
+('Coffee', (SELECT id FROM categories WHERE name="Non-Alcoholic"), 2),
+('Soft Drinks / Soda', (SELECT id FROM categories WHERE name="Non-Alcoholic"), 2),
+('Energy Drinks / Sports Drinks', (SELECT id FROM categories WHERE name="Non-Alcoholic"), 2),
+('Coconut Water / Flavored Water', (SELECT id FROM categories WHERE name="Non-Alcoholic"), 2);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Beer', (SELECT id FROM categories WHERE name="Alcoholic"), 2),
+('Wine', (SELECT id FROM categories WHERE name="Alcoholic"), 2),
+('Spirits', (SELECT id FROM categories WHERE name="Alcoholic"), 2),
+('Cocktails', (SELECT id FROM categories WHERE name="Alcoholic"), 2),
+('Liqueurs', (SELECT id FROM categories WHERE name="Alcoholic"), 2);
+
+
+
+-- =========================================
+-- 1. STAPLES & PANTRY
+-- =========================================
+INSERT INTO categories (name, parent_id, level) VALUES
+('Rice & Grains', 4, 1),
+('Flours & Baking', 4, 1),
+('Pulses & Lentils', 4, 1),
+('Spices & Herbs', 4, 1),
+('Cooking Oils & Fats', 4, 1),
+('Sugar, Salt & Sweeteners', 4, 1),
+('Sauces, Condiments & Pastes', 4, 1);
+
+-- Rice & Grains
+INSERT INTO categories (name, parent_id, level) VALUES
+('Basmati Rice', (SELECT id FROM categories WHERE name="Rice & Grains"), 2),
+('Brown Rice', (SELECT id FROM categories WHERE name="Rice & Grains"), 2),
+('Quinoa', (SELECT id FROM categories WHERE name="Rice & Grains"), 2),
+('Oats', (SELECT id FROM categories WHERE name="Rice & Grains"), 2),
+('Cornmeal / Polenta', (SELECT id FROM categories WHERE name="Rice & Grains"), 2);
+
+-- Flours & Baking
+INSERT INTO categories (name, parent_id, level) VALUES
+('Wheat Flour', (SELECT id FROM categories WHERE name="Flours & Baking"), 2),
+('Maida / All-Purpose Flour', (SELECT id FROM categories WHERE name="Flours & Baking"), 2),
+('Rice Flour', (SELECT id FROM categories WHERE name="Flours & Baking"), 2),
+('Baking Powder / Soda', (SELECT id FROM categories WHERE name="Flours & Baking"), 2);
+
+-- Pulses & Lentils
+INSERT INTO categories (name, parent_id, level) VALUES
+('Toor Dal', (SELECT id FROM categories WHERE name="Pulses & Lentils"), 2),
+('Moong Dal', (SELECT id FROM categories WHERE name="Pulses & Lentils"), 2),
+('Chana / Chickpeas', (SELECT id FROM categories WHERE name="Pulses & Lentils"), 2),
+('Rajma / Kidney Beans', (SELECT id FROM categories WHERE name="Pulses & Lentils"), 2),
+('Lentils (Masoor, Green, Black)', (SELECT id FROM categories WHERE name="Pulses & Lentils"), 2);
+
+-- Spices & Herbs
+INSERT INTO categories (name, parent_id, level) VALUES
+('Turmeric', (SELECT id FROM categories WHERE name="Spices & Herbs"), 2),
+('Cumin', (SELECT id FROM categories WHERE name="Spices & Herbs"), 2),
+('Coriander Powder', (SELECT id FROM categories WHERE name="Spices & Herbs"), 2),
+('Chili Powder', (SELECT id FROM categories WHERE name="Spices & Herbs"), 2),
+('Basil', (SELECT id FROM categories WHERE name="Spices & Herbs"), 2),
+('Oregano', (SELECT id FROM categories WHERE name="Spices & Herbs"), 2);
+
+-- Cooking Oils & Fats
+INSERT INTO categories (name, parent_id, level) VALUES
+('Vegetable Oil', (SELECT id FROM categories WHERE name="Cooking Oils & Fats"), 2),
+('Olive Oil', (SELECT id FROM categories WHERE name="Cooking Oils & Fats"), 2),
+('Coconut Oil', (SELECT id FROM categories WHERE name="Cooking Oils & Fats"), 2),
+('Ghee', (SELECT id FROM categories WHERE name="Cooking Oils & Fats"), 2),
+('Butter', (SELECT id FROM categories WHERE name="Cooking Oils & Fats"), 2);
+
+-- Sugar, Salt & Sweeteners
+INSERT INTO categories (name, parent_id, level) VALUES
+('White Sugar', (SELECT id FROM categories WHERE name="Sugar, Salt & Sweeteners"), 2),
+('Brown Sugar', (SELECT id FROM categories WHERE name="Sugar, Salt & Sweeteners"), 2),
+('Honey', (SELECT id FROM categories WHERE name="Sugar, Salt & Sweeteners"), 2),
+('Salt', (SELECT id FROM categories WHERE name="Sugar, Salt & Sweeteners"), 2),
+('Artificial Sweeteners', (SELECT id FROM categories WHERE name="Sugar, Salt & Sweeteners"), 2);
+
+-- Sauces, Condiments & Pastes
+INSERT INTO categories (name, parent_id, level) VALUES
+('Tomato Ketchup', (SELECT id FROM categories WHERE name="Sauces, Condiments & Pastes"), 2),
+('Soy Sauce', (SELECT id FROM categories WHERE name="Sauces, Condiments & Pastes"), 2),
+('Mustard', (SELECT id FROM categories WHERE name="Sauces, Condiments & Pastes"), 2),
+('Chili Sauce', (SELECT id FROM categories WHERE name="Sauces, Condiments & Pastes"), 2),
+('Mayonnaise', (SELECT id FROM categories WHERE name="Sauces, Condiments & Pastes"), 2);
+
+-- =========================================
+-- 2. MEAT, SEAFOOD & PROTEIN
+-- =========================================
+INSERT INTO categories (name, parent_id, level) VALUES
+('Meat', 6, 1),
+('Seafood', 6, 1),
+('Poultry', 6, 1),
+('Tofu / Plant Protein', 6, 1);
+
+-- Meat
+INSERT INTO categories (name, parent_id, level) VALUES
+('Mutton / Lamb', (SELECT id FROM categories WHERE name="Meat"), 2),
+('Beef', (SELECT id FROM categories WHERE name="Meat"), 2),
+('Pork', (SELECT id FROM categories WHERE name="Meat"), 2);
+
+-- Seafood
+INSERT INTO categories (name, parent_id, level) VALUES
+('Fish', (SELECT id FROM categories WHERE name="Seafood"), 2),
+('Shrimp / Prawns', (SELECT id FROM categories WHERE name="Seafood"), 2),
+('Crab', (SELECT id FROM categories WHERE name="Seafood"), 2),
+('Lobster', (SELECT id FROM categories WHERE name="Seafood"), 2),
+('Squid / Calamari', (SELECT id FROM categories WHERE name="Seafood"), 2);
+
+-- Poultry
+INSERT INTO categories (name, parent_id, level) VALUES
+('Chicken', (SELECT id FROM categories WHERE name="Poultry"), 2),
+('Duck', (SELECT id FROM categories WHERE name="Poultry"), 2),
+('Turkey', (SELECT id FROM categories WHERE name="Poultry"), 2);
+
+-- =========================================
+-- 3. RESTAURANTS / CAFES / TAKEOUT
+-- =========================================
+INSERT INTO categories (name, parent_id, level) VALUES
+('Fast Food', 8, 1),
+('Cafes / Coffee Shops', 8, 1),
+('Local / Street Food', 8, 1),
+('Fine Dining', 8, 1);
+
+-- =========================================
+-- 4. SPECIAL / MISCELLANEOUS
+-- =========================================
+INSERT INTO categories (name, parent_id, level) VALUES
+('Baby Food', 9, 1),
+('Health Foods / Supplements', 9, 1),
+('Pet Food', 9, 1),
+('Seasonal / Festival Items', 9, 1);
+
+
+---
+
+-- =========================================
+-- 1. DROP TABLES IF THEY EXIST
+-- =========================================
+DROP TABLE IF EXISTS items;
+DROP TABLE IF EXISTS categories;
+
+-- =========================================
+-- 2. CREATE CATEGORIES TABLE
+-- =========================================
+CREATE TABLE categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    parent_id INT DEFAULT NULL,
+    level INT DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (parent_id) REFERENCES categories(id) ON DELETE CASCADE
+);
+
+-- =========================================
+-- 3. CREATE ITEMS TABLE
+-- =========================================
+CREATE TABLE items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    category_id INT NOT NULL,
+    unit VARCHAR(50),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+);
+
+-- =========================================
+-- 4. INSERT TOP-LEVEL CATEGORIES
+-- =========================================
+INSERT INTO categories (id, name, parent_id, level) VALUES
+(1, 'Dairy & Eggs', NULL, 0),
+(2, 'Fruits', NULL, 0),
+(3, 'Vegetables', NULL, 0),
+(4, 'Staples & Pantry', NULL, 0),
+(5, 'Snacks & Packaged Food', NULL, 0),
+(6, 'Meat, Seafood & Protein', NULL, 0),
+(7, 'Drinks', NULL, 0),
+(8, 'Restaurants / Cafes / Takeout', NULL, 0),
+(9, 'Special / Miscellaneous', NULL, 0);
+
+-- =========================================
+-- 5. DAIRY & EGGS
+-- =========================================
+SET @dairy = (SELECT id FROM categories WHERE name='Dairy & Eggs');
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Milk', @dairy, 1),
+('Cheese', @dairy, 1),
+('Yogurt / Dahi / Greek Yogurt', @dairy, 1),
+('Butter / Ghee / Margarine', @dairy, 1),
+('Cream / Condensed Milk', @dairy, 1),
+('Eggs', @dairy, 1);
+
+SET @milk = (SELECT id FROM categories WHERE name='Milk');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Cow Milk', @milk, 2),
+('Buffalo Milk', @milk, 2),
+('Almond Milk', @milk, 2),
+('Soy Milk', @milk, 2),
+('Oat Milk', @milk, 2);
+
+SET @cheese = (SELECT id FROM categories WHERE name='Cheese');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Cheddar', @cheese, 2),
+('Mozzarella', @cheese, 2),
+('Paneer', @cheese, 2),
+('Feta', @cheese, 2),
+('Gouda', @cheese, 2);
+
+-- =========================================
+-- 6. FRUITS
+-- =========================================
+SET @fruits = (SELECT id FROM categories WHERE name='Fruits');
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Common Fruits', @fruits, 1),
+('Berries', @fruits, 1),
+('Citrus', @fruits, 1),
+('Tropical', @fruits, 1),
+('Exotic', @fruits, 1);
+
+SET @common_fruits = (SELECT id FROM categories WHERE name='Common Fruits');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Apple', @common_fruits, 2),
+('Banana', @common_fruits, 2),
+('Orange', @common_fruits, 2),
+('Grapes', @common_fruits, 2),
+('Mango', @common_fruits, 2),
+('Pear', @common_fruits, 2);
+
+SET @berries = (SELECT id FROM categories WHERE name='Berries');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Strawberry', @berries, 2),
+('Blueberry', @berries, 2),
+('Raspberry', @berries, 2),
+('Blackberry', @berries, 2);
+
+SET @citrus = (SELECT id FROM categories WHERE name='Citrus');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Lemon', @citrus, 2),
+('Lime', @citrus, 2),
+('Grapefruit', @citrus, 2);
+
+SET @tropical = (SELECT id FROM categories WHERE name='Tropical');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Papaya', @tropical, 2),
+('Pineapple', @tropical, 2),
+('Watermelon', @tropical, 2),
+('Guava', @tropical, 2);
+
+SET @exotic = (SELECT id FROM categories WHERE name='Exotic');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Dragon Fruit', @exotic, 2),
+('Kiwi', @exotic, 2),
+('Pomegranate', @exotic, 2),
+('Passion Fruit', @exotic, 2),
+('Starfruit', @exotic, 2);
+
+-- =========================================
+-- 7. VEGETABLES
+-- =========================================
+SET @vegetables = (SELECT id FROM categories WHERE name='Vegetables');
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Leafy Greens', @vegetables, 1),
+('Root Vegetables', @vegetables, 1),
+('Cruciferous', @vegetables, 1),
+('Others', @vegetables, 1);
+
+SET @leafy = (SELECT id FROM categories WHERE name='Leafy Greens');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Spinach', @leafy, 2),
+('Lettuce', @leafy, 2),
+('Kale', @leafy, 2),
+('Mint', @leafy, 2),
+('Coriander', @leafy, 2),
+('Fenugreek', @leafy, 2);
+
+SET @root = (SELECT id FROM categories WHERE name='Root Vegetables');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Carrot', @root, 2),
+('Potato', @root, 2),
+('Beetroot', @root, 2),
+('Radish', @root, 2),
+('Turnip', @root, 2),
+('Ginger', @root, 2),
+('Garlic', @root, 2);
+
+SET @cruciferous = (SELECT id FROM categories WHERE name='Cruciferous');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Broccoli', @cruciferous, 2),
+('Cauliflower', @cruciferous, 2),
+('Cabbage', @cruciferous, 2),
+('Brussels Sprouts', @cruciferous, 2);
+
+SET @others = (SELECT id FROM categories WHERE name='Others');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Tomato', @others, 2),
+('Cucumber', @others, 2),
+('Capsicum', @others, 2),
+('Eggplant', @others, 2),
+('Pumpkin', @others, 2),
+('Zucchini', @others, 2);
+
+-- =========================================
+-- 8. STAPLES & PANTRY
+-- =========================================
+SET @staples = (SELECT id FROM categories WHERE name='Staples & Pantry');
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Rice & Grains', @staples, 1),
+('Flours & Baking', @staples, 1),
+('Pulses & Lentils', @staples, 1),
+('Spices & Herbs', @staples, 1),
+('Cooking Oils & Fats', @staples, 1),
+('Sugar, Salt & Sweeteners', @staples, 1),
+('Sauces, Condiments & Pastes', @staples, 1);
+
+-- Rice & Grains
+SET @rice = (SELECT id FROM categories WHERE name='Rice & Grains');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Basmati Rice', @rice, 2),
+('Brown Rice', @rice, 2),
+('Quinoa', @rice, 2),
+('Oats', @rice, 2),
+('Cornmeal / Polenta', @rice, 2);
+
+-- Flours & Baking
+SET @flours = (SELECT id FROM categories WHERE name='Flours & Baking');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Wheat Flour', @flours, 2),
+('Maida / All-Purpose Flour', @flours, 2),
+('Rice Flour', @flours, 2),
+('Baking Powder / Soda', @flours, 2);
+
+-- Pulses & Lentils
+SET @pulses = (SELECT id FROM categories WHERE name='Pulses & Lentils');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Toor Dal', @pulses, 2),
+('Moong Dal', @pulses, 2),
+('Chana / Chickpeas', @pulses, 2),
+('Rajma / Kidney Beans', @pulses, 2),
+('Lentils (Masoor, Green, Black)', @pulses, 2);
+
+-- Spices & Herbs
+SET @spices = (SELECT id FROM categories WHERE name='Spices & Herbs');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Turmeric', @spices, 2),
+('Cumin', @spices, 2),
+('Coriander Powder', @spices, 2),
+('Chili Powder', @spices, 2),
+('Basil', @spices, 2),
+('Oregano', @spices, 2);
+
+-- Cooking Oils & Fats
+SET @oils = (SELECT id FROM categories WHERE name='Cooking Oils & Fats');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Vegetable Oil', @oils, 2),
+('Olive Oil', @oils, 2),
+('Coconut Oil', @oils, 2),
+('Ghee', @oils, 2),
+('Butter', @oils, 2);
+
+-- Sugar, Salt & Sweeteners
+SET @sugar = (SELECT id FROM categories WHERE name='Sugar, Salt & Sweeteners');
+INSERT INTO categories (name, parent_id, level) VALUES
+('White Sugar', @sugar, 2),
+('Brown Sugar', @sugar, 2),
+('Honey', @sugar, 2),
+('Salt', @sugar, 2),
+('Artificial Sweeteners', @sugar, 2);
+
+-- Sauces, Condiments & Pastes
+SET @sauces = (SELECT id FROM categories WHERE name='Sauces, Condiments & Pastes');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Tomato Ketchup', @sauces, 2),
+('Soy Sauce', @sauces, 2),
+('Mustard', @sauces, 2),
+('Chili Sauce', @sauces, 2),
+('Mayonnaise', @sauces, 2);
+
+-- =========================================
+-- 9. SNACKS & PACKAGED FOOD
+-- =========================================
+SET @snacks = (SELECT id FROM categories WHERE name='Snacks & Packaged Food');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Chips / Namkeen', @snacks, 1),
+('Biscuits / Cookies / Crackers', @snacks, 1),
+('Chocolates / Candy / Sweets / Mithai', @snacks, 1),
+('Instant Noodles / Pasta / Ready-to-eat Meals', @snacks, 1),
+('Nuts / Seeds / Dry Fruits', @snacks, 1),
+('Breakfast Cereals / Granola Bars', @snacks, 1);
+
+-- =========================================
+-- 10. DRINKS
+-- =========================================
+SET @drinks = (SELECT id FROM categories WHERE name='Drinks');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Non-Alcoholic', @drinks, 1),
+('Alcoholic', @drinks, 1);
+
+SET @nonalc = (SELECT id FROM categories WHERE name='Non-Alcoholic');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Water', @nonalc, 2),
+('Juices', @nonalc, 2),
+('Tea', @nonalc, 2),
+('Coffee', @nonalc, 2),
+('Soft Drinks / Soda', @nonalc, 2),
+('Energy Drinks / Sports Drinks', @nonalc, 2),
+('Coconut Water / Flavored Water', @nonalc, 2);
+
+SET @alc = (SELECT id FROM categories WHERE name='Alcoholic');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Beer', @alc, 2),
+('Wine', @alc, 2),
+('Spirits', @alc, 2),
+('Cocktails', @alc, 2),
+('Liqueurs', @alc, 2);
+
+-- =========================================
+-- 11. MEAT, SEAFOOD & PROTEIN
+-- =========================================
+SET @meat = (SELECT id FROM categories WHERE name='Meat, Seafood & Protein');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Meat', @meat, 1),
+('Seafood', @meat, 1),
+('Poultry', @meat, 1),
+('Tofu / Plant Protein', @meat, 1);
+
+SET @meatc = (SELECT id FROM categories WHERE name='Meat');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Mutton / Lamb', @meatc, 2),
+('Beef', @meatc, 2),
+('Pork', @meatc, 2);
+
+SET @seafood = (SELECT id FROM categories WHERE name='Seafood');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Fish', @seafood, 2),
+('Shrimp / Prawns', @seafood, 2),
+('Crab', @seafood, 2),
+('Lobster', @seafood, 2),
+('Squid / Calamari', @seafood, 2);
+
+SET @poultry = (SELECT id FROM categories WHERE name='Poultry');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Chicken', @poultry, 2),
+('Duck', @poultry, 2),
+('Turkey', @poultry, 2);
+
+-- =========================================
+-- 12. RESTAURANTS / CAFES / TAKEOUT
+-- =========================================
+SET @restaurants = (SELECT id FROM categories WHERE name='Restaurants / Cafes / Takeout');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Fast Food', @restaurants, 1),
+('Cafes / Coffee Shops', @restaurants, 1),
+('Local / Street Food', @restaurants, 1),
+('Fine Dining', @restaurants, 1);
+
+-- =========================================
+-- 13. SPECIAL / MISCELLANEOUS
+-- =========================================
+SET @special = (SELECT id FROM categories WHERE name='Special / Miscellaneous');
+INSERT INTO categories (name, parent_id, level) VALUES
+('Baby Food', @special, 1),
+('Health Foods / Supplements', @special, 1),
+('Pet Food', @special, 1),
+('Seasonal / Festival Items', @special, 1);
+
+---

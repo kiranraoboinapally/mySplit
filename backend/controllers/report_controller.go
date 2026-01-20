@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kiranraoboinapally/mySplit/backend2/config"
-	"github.com/kiranraoboinapally/mySplit/backend2/models"
+	"github.com/kiranraoboinapally/mySplit/backend/config"
+	"github.com/kiranraoboinapally/mySplit/backend/models"
 )
 
 type MonthlyAnalysis struct {
@@ -45,7 +45,7 @@ func GetSpendingAnalysis(c *gin.Context) {
 		analysis.TotalSpent += exp.TotalAmount
 		
 		catName := "Uncategorized"
-		if exp.Category != nil {
+		if exp.Category.ID != 0 {
 			catName = exp.Category.Name
 		}
 		analysis.ByCategory[catName] += exp.TotalAmount

@@ -7,9 +7,9 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/kiranraoboinapally/mySplit/backend2/config"
-	"github.com/kiranraoboinapally/mySplit/backend2/controllers"
-	"github.com/kiranraoboinapally/mySplit/backend2/middleware"
+	"github.com/kiranraoboinapally/mySplit/backend/config"
+	"github.com/kiranraoboinapally/mySplit/backend/controllers"
+	"github.com/kiranraoboinapally/mySplit/backend/middleware"
 )
 
 func main() {
@@ -48,6 +48,8 @@ func main() {
 
 		// Categories
 		protected.GET("/categories", controllers.GetCategories)
+		protected.GET("/categories/tree", controllers.GetCategoryTree)
+		protected.GET("/categories/:id/children", controllers.GetCategoryChildren)
 		protected.POST("/categories", controllers.CreateCategory)
 
 		// Shared Expenses

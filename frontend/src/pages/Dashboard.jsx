@@ -146,9 +146,7 @@ const Dashboard = () => {
                             <h3 className="text-3xl font-extrabold text-gray-900 mt-2">
                                 {formatCurrency(analysis ? analysis.totalSpent : 0)}
                             </h3>
-                            <p className="text-xs text-green-500 mt-2 font-medium flex items-center gap-1">
-                                <TrendingUp size={12} /> +12% from last month
-                            </p>
+
                         </div>
                     </div>
 
@@ -159,13 +157,12 @@ const Dashboard = () => {
                         </h3>
                     </div>
 
-                    <div className="bg-gradient-to-br from-violet-600 to-fuchsia-600 p-6 rounded-2xl shadow-lg text-white">
-                        <p className="text-sm font-medium opacity-80 uppercase tracking-wider">Remaining Budget</p>
-                        <h3 className="text-3xl font-extrabold mt-2">₹12,450.00</h3>
-                        <div className="w-full bg-white/20 h-2 rounded-full mt-4">
-                            <div className="bg-white h-2 rounded-full" style={{ width: '70%' }}></div>
-                        </div>
-                        <p className="text-xs mt-2 opacity-80">70% utilized</p>
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                        <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Expenses</p>
+                        <h3 className="text-xl font-bold text-gray-900 mt-2">
+                            {expenses.length}
+                        </h3>
+                        <p className="text-xs text-gray-400 mt-2">Transactions this month</p>
                     </div>
                 </div>
 

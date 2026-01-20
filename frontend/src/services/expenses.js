@@ -50,6 +50,18 @@ const getSpendingAnalysis = () => {
     return axios.get(`${API_URL}/reports/spending`, { headers: getAuthHeader() });
 };
 
+const getCategoriesByLevel = (level) => {
+    return axios.get(`${API_URL}/categories?level=${level}`, { headers: getAuthHeader() });
+};
+
+const getCategoryChildren = (parentId) => {
+    return axios.get(`${API_URL}/categories/${parentId}/children`, { headers: getAuthHeader() });
+};
+
+const getCategoryTree = () => {
+    return axios.get(`${API_URL}/categories/tree`, { headers: getAuthHeader() });
+};
+
 const ExpenseService = {
     signup,
     login,
@@ -60,7 +72,10 @@ const ExpenseService = {
     createCategory,
     getSharedOwed,
     getSharedLended,
-    getSpendingAnalysis
+    getSpendingAnalysis,
+    getCategoriesByLevel,
+    getCategoryChildren,
+    getCategoryTree
 };
 
 export default ExpenseService;

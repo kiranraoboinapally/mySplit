@@ -7,7 +7,7 @@ import (
 type Expense struct {
 	ID                 uint      `gorm:"primaryKey" json:"id"`
 	UserID             uint      `gorm:"not null" json:"userId"`
-	CategoryID         *uint     `json:"categoryId"`
+	CategoryID         uint      `gorm:"not null" json:"categoryId"`
 	ItemName           string    `gorm:"column:item_name;not null" json:"itemName"`
 	Quantity           *float64  `json:"quantity"`
 	Unit               string    `json:"unit"` // kg, litre, pieces, etc.
@@ -21,5 +21,5 @@ type Expense struct {
 	
 	// Associations
 	User     User     `gorm:"foreignKey:UserID" json:"user,omitempty"`
-	Category *Category `gorm:"foreignKey:CategoryID" json:"category,omitempty"`
+	Category Category `gorm:"foreignKey:CategoryID" json:"category,omitempty"`
 }
