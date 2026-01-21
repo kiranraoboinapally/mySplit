@@ -30,7 +30,7 @@ func main() {
 	// Local + Vercel
 	corsConfig.AllowOrigins = []string{
 		"http://localhost:3000",
-		"https://mysplit-two.vercel.app/login",
+		"https://my-split-rho.vercel.app",
 	}
 
 	corsConfig.AllowMethods = []string{
