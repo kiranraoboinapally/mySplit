@@ -24,24 +24,25 @@ func main() {
 
 	r := gin.Default()
 
-	// CORS setup
-	corsConfig := cors.DefaultConfig()
-
-	// Local + Vercel
-	corsConfig.AllowOrigins = []string{
-		"http://localhost:3000",
-		"https://my-split-rho.vercel.app",
+	// 🔥 FIXED CORS (WORKS FOR ALL)
+	corsConfig := cors.Config{
+		AllowOrigins: []string{
+			"http://localhost:3000",           // local dev
+			"https://my-split-rho.vercel.app", // your vercel domain
+		},
+		AllowMethods: []string{
+			"GET", "POST", "PUT", "DELETE", "OPTIONS",
+		},
+		AllowHeaders: []string{
+			"Origin",
+			"Content-Type",
+			"Authorization",
+		},
+		AllowCredentials: true,
 	}
 
-	corsConfig.AllowMethods = []string{
-		"GET", "POST", "PUT", "DELETE", "OPTIONS",
-	}
-
-	corsConfig.AllowHeaders = []string{
-		"Origin",
-		"Content-Type",
-		"Authorization",
-	}
+	// ✅ This will fix CORS for now:
+	// corsConfig.AllowAllOrigins = true
 
 	r.Use(cors.New(corsConfig))
 
