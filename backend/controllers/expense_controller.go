@@ -1,3 +1,5 @@
+package controllers
+
 import (
 	"net/http"
 	"time"
@@ -68,20 +70,33 @@ func CreateExpense(c *gin.Context) {
 		amountPerPerson := input.TotalAmount / float64(totalPeople)
 
 		for _, friend := range input.SplitWith {
-			// For now, we'll store friend info in notes
-			// In production, you'd want a separate friends/contacts table
+			// Find friend's user ID
+			var friendUser models.User
+			if err := config.DB.Where("email = ?", friend.Email).First(&friendUser).Error; err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "User with email " + friend.Email + " not found. Please ask them to register first."})
+				return
+			}
+
+			if friendUser.ID == uint(userID.(float64)) {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "Cannot split expense with yourself"})
+				return
+			}
+
 			sharedExpense := models.SharedExpense{
 				ExpenseID:    expense.ID,
 				PayerUserID:  uint(userID.(float64)), // Current user paid
-				DebtorUserID: 0, // Placeholder - would be friend's user ID
+				DebtorUserID: friendUser.ID,          // Friend owes
 				AmountOwed:   amountPerPerson,
 				IsSettled:    false,
 			}
 
-			// Store friend details in expense notes for now
-			expense.Notes += "\nSplit with: " + friend.Name + " (" + friend.Email + ")"
+			// Add friend details to notes for reference
+			expense.Notes += "\nSplit with: " + friendUser.Name + " (" + friendUser.Email + ")"
 
-			config.DB.Create(&sharedExpense)
+			if err := config.DB.Create(&sharedExpense).Error; err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not create shared expense"})
+				return
+			}
 		}
 
 		// Update expense notes

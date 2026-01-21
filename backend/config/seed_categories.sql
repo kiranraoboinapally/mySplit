@@ -396,9 +396,435 @@ INSERT INTO categories (name, parent_id, level) VALUES
 ('Security', @helpers, 2),
 ('Driver', @helpers, 2);
 
--- Reset auto increment
-ALTER TABLE categories AUTO_INCREMENT = 1;
+-- Reset auto increment (Moved to end)
+-- ALTER TABLE categories AUTO_INCREMENT = 1;
 
--- Success message (commented)
--- SELECT 'Category seeding complete!' AS status;
--- SELECT COUNT(*) AS total_categories FROM categories;
+-- =========================================
+-- DETAILED GROCERY SEEDING (Level 3 & 4)
+-- =========================================
+
+-- 1. DAIRY & EGGS DETAILS
+SET @dairy = (SELECT id FROM categories WHERE name='Dairy & Eggs' AND parent_id=@groceries);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Milk', @dairy, 3),
+('Cheese', @dairy, 3),
+('Yogurt / Dahi / Greek Yogurt', @dairy, 3),
+('Butter / Ghee / Margarine', @dairy, 3),
+('Cream / Condensed Milk', @dairy, 3),
+('Eggs', @dairy, 3);
+
+SET @milk = (SELECT id FROM categories WHERE name='Milk' AND parent_id=@dairy);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Cow Milk', @milk, 4),
+('Buffalo Milk', @milk, 4),
+('Almond Milk', @milk, 4),
+('Soy Milk', @milk, 4),
+('Oat Milk', @milk, 4);
+
+SET @cheese = (SELECT id FROM categories WHERE name='Cheese' AND parent_id=@dairy);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Cheddar', @cheese, 4),
+('Mozzarella', @cheese, 4),
+('Paneer', @cheese, 4),
+('Feta', @cheese, 4),
+('Gouda', @cheese, 4);
+
+-- 2. FRUITS DETAILS
+SET @fruits = (SELECT id FROM categories WHERE name='Fruits' AND parent_id=@groceries);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Common Fruits', @fruits, 3),
+('Berries', @fruits, 3),
+('Citrus', @fruits, 3),
+('Tropical', @fruits, 3),
+('Exotic', @fruits, 3);
+
+SET @common_fruits = (SELECT id FROM categories WHERE name='Common Fruits' AND parent_id=@fruits);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Apple', @common_fruits, 4),
+('Banana', @common_fruits, 4),
+('Orange', @common_fruits, 4),
+('Grapes', @common_fruits, 4),
+('Mango', @common_fruits, 4),
+('Pear', @common_fruits, 4);
+
+SET @berries = (SELECT id FROM categories WHERE name='Berries' AND parent_id=@fruits);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Strawberry', @berries, 4),
+('Blueberry', @berries, 4),
+('Raspberry', @berries, 4),
+('Blackberry', @berries, 4);
+
+SET @citrus = (SELECT id FROM categories WHERE name='Citrus' AND parent_id=@fruits);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Lemon', @citrus, 4),
+('Lime', @citrus, 4),
+('Grapefruit', @citrus, 4);
+
+SET @tropical = (SELECT id FROM categories WHERE name='Tropical' AND parent_id=@fruits);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Papaya', @tropical, 4),
+('Pineapple', @tropical, 4),
+('Watermelon', @tropical, 4),
+('Guava', @tropical, 4);
+
+SET @exotic = (SELECT id FROM categories WHERE name='Exotic' AND parent_id=@fruits);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Dragon Fruit', @exotic, 4),
+('Kiwi', @exotic, 4),
+('Pomegranate', @exotic, 4),
+('Passion Fruit', @exotic, 4),
+('Starfruit', @exotic, 4);
+
+-- 3. VEGETABLES DETAILS
+SET @vegetables = (SELECT id FROM categories WHERE name='Vegetables' AND parent_id=@groceries);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Leafy Greens', @vegetables, 3),
+('Root Vegetables', @vegetables, 3),
+('Cruciferous', @vegetables, 3),
+('Others', @vegetables, 3);
+
+SET @leafy = (SELECT id FROM categories WHERE name='Leafy Greens' AND parent_id=@vegetables);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Spinach', @leafy, 4),
+('Lettuce', @leafy, 4),
+('Kale', @leafy, 4),
+('Mint', @leafy, 4),
+('Coriander', @leafy, 4),
+('Fenugreek', @leafy, 4);
+
+SET @root = (SELECT id FROM categories WHERE name='Root Vegetables' AND parent_id=@vegetables);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Carrot', @root, 4),
+('Potato', @root, 4),
+('Beetroot', @root, 4),
+('Radish', @root, 4),
+('Turnip', @root, 4),
+('Ginger', @root, 4),
+('Garlic', @root, 4);
+
+SET @cruciferous = (SELECT id FROM categories WHERE name='Cruciferous' AND parent_id=@vegetables);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Broccoli', @cruciferous, 4),
+('Cauliflower', @cruciferous, 4),
+('Cabbage', @cruciferous, 4),
+('Brussels Sprouts', @cruciferous, 4);
+
+SET @others = (SELECT id FROM categories WHERE name='Others' AND parent_id=@vegetables);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Tomato', @others, 4),
+('Cucumber', @others, 4),
+('Capsicum', @others, 4),
+('Eggplant', @others, 4),
+('Pumpkin', @others, 4),
+('Zucchini', @others, 4);
+
+-- 4. STAPLES & GRAINS DETAILS
+SET @staples = (SELECT id FROM categories WHERE name='Staples & Grains' AND parent_id=@groceries);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Rice & Grains', @staples, 3),
+('Flours & Baking', @staples, 3),
+('Pulses & Lentils', @staples, 3),
+('Spices & Herbs', @staples, 3),
+('Cooking Oils & Fats', @staples, 3),
+('Sugar, Salt & Sweeteners', @staples, 3),
+('Sauces, Condiments & Pastes', @staples, 3);
+
+SET @rice = (SELECT id FROM categories WHERE name='Rice & Grains' AND parent_id=@staples);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Basmati Rice', @rice, 4),
+('Brown Rice', @rice, 4),
+('Quinoa', @rice, 4),
+('Oats', @rice, 4),
+('Cornmeal / Polenta', @rice, 4);
+
+SET @flours = (SELECT id FROM categories WHERE name='Flours & Baking' AND parent_id=@staples);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Wheat Flour', @flours, 4),
+('Maida / All-Purpose Flour', @flours, 4),
+('Rice Flour', @flours, 4),
+('Baking Powder / Soda', @flours, 4);
+
+SET @pulses = (SELECT id FROM categories WHERE name='Pulses & Lentils' AND parent_id=@staples);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Toor Dal', @pulses, 4),
+('Moong Dal', @pulses, 4),
+('Chana / Chickpeas', @pulses, 4),
+('Rajma / Kidney Beans', @pulses, 4),
+('Lentils (Masoor, Green, Black)', @pulses, 4);
+
+SET @spices = (SELECT id FROM categories WHERE name='Spices & Herbs' AND parent_id=@staples);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Turmeric', @spices, 4),
+('Cumin', @spices, 4),
+('Coriander Powder', @spices, 4),
+('Chili Powder', @spices, 4),
+('Basil', @spices, 4),
+('Oregano', @spices, 4);
+
+SET @oils = (SELECT id FROM categories WHERE name='Cooking Oils & Fats' AND parent_id=@staples);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Vegetable Oil', @oils, 4),
+('Olive Oil', @oils, 4),
+('Coconut Oil', @oils, 4),
+('Ghee', @oils, 4),
+('Butter', @oils, 4);
+
+SET @sugar = (SELECT id FROM categories WHERE name='Sugar, Salt & Sweeteners' AND parent_id=@staples);
+INSERT INTO categories (name, parent_id, level) VALUES
+('White Sugar', @sugar, 4),
+('Brown Sugar', @sugar, 4),
+('Honey', @sugar, 4),
+('Salt', @sugar, 4),
+('Artificial Sweeteners', @sugar, 4);
+
+SET @sauces = (SELECT id FROM categories WHERE name='Sauces, Condiments & Pastes' AND parent_id=@staples);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Tomato Ketchup', @sauces, 4),
+('Soy Sauce', @sauces, 4),
+('Mustard', @sauces, 4),
+('Chili Sauce', @sauces, 4),
+('Mayonnaise', @sauces, 4);
+
+-- 5. SNACKS DETAILS
+SET @snacks = (SELECT id FROM categories WHERE name='Snacks & Packaged' AND parent_id=@groceries);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Chips / Namkeen', @snacks, 3),
+('Biscuits / Cookies / Crackers', @snacks, 3),
+('Chocolates / Candy / Sweets / Mithai', @snacks, 3),
+('Instant Noodles / Pasta / Ready-to-eat Meals', @snacks, 3),
+('Nuts / Seeds / Dry Fruits', @snacks, 3),
+('Breakfast Cereals / Granola Bars', @snacks, 3);
+
+-- 6. MEAT & SEAFOOD DETAILS
+SET @meat_seafood = (SELECT id FROM categories WHERE name='Meat & Seafood' AND parent_id=@groceries);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Meat', @meat_seafood, 3),
+('Seafood', @meat_seafood, 3),
+('Poultry', @meat_seafood, 3),
+('Tofu / Plant Protein', @meat_seafood, 3);
+
+SET @meat = (SELECT id FROM categories WHERE name='Meat' AND parent_id=@meat_seafood);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Mutton / Lamb', @meat, 4),
+('Beef', @meat, 4),
+('Pork', @meat, 4);
+
+SET @seafood = (SELECT id FROM categories WHERE name='Seafood' AND parent_id=@meat_seafood);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Fish', @seafood, 4),
+('Shrimp / Prawns', @seafood, 4),
+('Crab', @seafood, 4),
+('Lobster', @seafood, 4),
+('Squid / Calamari', @seafood, 4);
+
+SET @poultry = (SELECT id FROM categories WHERE name='Poultry' AND parent_id=@meat_seafood);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Chicken', @poultry, 4),
+('Duck', @poultry, 4),
+('Turkey', @poultry, 4);
+
+-- 7. BEVERAGES DETAILS (Level 3 under Non-Alcoholic / Alcoholic)
+SET @beverages = (SELECT id FROM categories WHERE name='Beverages' AND parent_id=1);
+SET @non_alcoholic = (SELECT id FROM categories WHERE name='Non-Alcoholic' AND parent_id=@beverages);
+SET @alcoholic = (SELECT id FROM categories WHERE name='Alcoholic' AND parent_id=@beverages);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Water', @non_alcoholic, 3),
+('Juices', @non_alcoholic, 3),
+('Tea', @non_alcoholic, 3),
+('Coffee', @non_alcoholic, 3),
+('Soft Drinks / Soda', @non_alcoholic, 3),
+('Energy Drinks / Sports Drinks', @non_alcoholic, 3),
+('Coconut Water / Flavored Water', @non_alcoholic, 3);
+
+INSERT INTO categories (name, parent_id, level) VALUES
+('Beer', @alcoholic, 3),
+('Wine', @alcoholic, 3),
+('Spirits', @alcoholic, 3),
+('Cocktails', @alcoholic, 3),
+('Liqueurs', @alcoholic, 3);
+
+-- =========================================
+-- DETAILED NON-GROCERY SEEDING (Level 2, 3 & 4)
+-- =========================================
+
+-- 1. TRANSPORT DETAILS
+SET @transport = 2; 
+
+SET @fuel = (SELECT id FROM categories WHERE name='Fuel & Gas' AND parent_id=@transport);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Petrol', @fuel, 2),
+('Diesel', @fuel, 2),
+('CNG / LPG', @fuel, 2),
+('EV Charging', @fuel, 2);
+
+SET @maintenance = (SELECT id FROM categories WHERE name='Vehicle Maintenance' AND parent_id=@transport);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Car Service', @maintenance, 2),
+('Bike Service', @maintenance, 2),
+('Car Wash', @maintenance, 2),
+('Spare Parts', @maintenance, 2),
+('Tyre Replacement', @maintenance, 2);
+
+SET @parking = (SELECT id FROM categories WHERE name='Parking & Tolls' AND parent_id=@transport);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Parking Fees', @parking, 2),
+('Toll / FastTag', @parking, 2),
+('Traffic Fines', @parking, 2);
+
+SET @flights = (SELECT id FROM categories WHERE name='Flights & Trips' AND parent_id=@transport);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Domestic Flights', @flights, 2),
+('International Flights', @flights, 2),
+('Travel Agent Fees', @flights, 2),
+('Visa Fees', @flights, 2);
+
+-- 2. HOUSING DETAILS
+SET @housing = 3;
+
+SET @rent = (SELECT id FROM categories WHERE name='Rent / Mortgage' AND parent_id=@housing);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Monthly Rent', @rent, 2),
+('Maintenance Charges', @rent, 2),
+('Brokerage', @rent, 2),
+('Property Tax', @rent, 2);
+
+SET @electricity = (SELECT id FROM categories WHERE name='Electricity' AND parent_id=@housing);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Monthly Bill', @electricity, 2),
+('Arrears', @electricity, 2);
+
+SET @watergas = (SELECT id FROM categories WHERE name='Water & Gas' AND parent_id=@housing);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Water Tanker', @watergas, 2),
+('Corporation Water Bill', @watergas, 2),
+('Gas Cylinder (LPG)', @watergas, 2),
+('Piped Gas Bill', @watergas, 2);
+
+SET @repairs = (SELECT id FROM categories WHERE name='Home Repairs' AND parent_id=@housing);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Plumbing', @repairs, 2),
+('Electrical Work', @repairs, 2),
+('Carpenter / Woodwork', @repairs, 2),
+('Painting', @repairs, 2),
+('Appliance Repair', @repairs, 2);
+
+SET @furniture = (SELECT id FROM categories WHERE name='Furniture & Decor' AND parent_id=@housing);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Furniture', @furniture, 2),
+('Curtains & Blinds', @furniture, 2),
+('Lighting & Lamps', @furniture, 2),
+('Plants & Garden', @furniture, 2);
+
+SET @cleaning = (SELECT id FROM categories WHERE name='Cleaning & Supplies' AND parent_id=@housing);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Maid Salary', @cleaning, 2),
+('Floor Cleaner / Phenyl', @cleaning, 2),
+('Laundry / Detergent', @cleaning, 2),
+('Dishwashing', @cleaning, 2),
+('Bathroom Supplies', @cleaning, 2);
+
+-- 3. HEALTH DETAILS
+SET @health = 4;
+
+SET @doctor = (SELECT id FROM categories WHERE name='Doctor Visits' AND parent_id=@health);
+INSERT INTO categories (name, parent_id, level) VALUES
+('General Physician', @doctor, 2),
+('Dentist', @doctor, 2),
+('Eye Specialist', @doctor, 2),
+('Dermatologist', @doctor, 2),
+('Lab Tests / Diagnostics', @doctor, 2);
+
+SET @medicines = (SELECT id FROM categories WHERE name='Medicines' AND parent_id=@health);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Prescription Medicines', @medicines, 2),
+('OTC / First Aid', @medicines, 2),
+('Vitamins & Supplements', @medicines, 2),
+('Homeopathy / Ayurveda', @medicines, 2);
+
+SET @insurance_health = (SELECT id FROM categories WHERE name='Health Insurance' AND parent_id=@health);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Premium Payment', @insurance_health, 2),
+('Top-up Plan', @insurance_health, 2);
+
+-- 4. ENTERTAINMENT DETAILS
+SET @entertainment = 5;
+
+SET @movies = (SELECT id FROM categories WHERE name='Movies & Cinema' AND parent_id=@entertainment);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Movie Tickets', @movies, 2),
+('Popcorn & Snacks', @movies, 2),
+('IMAX / Premium', @movies, 2);
+
+SET @events = (SELECT id FROM categories WHERE name='Events & Concerts' AND parent_id=@entertainment);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Concerts', @events, 2),
+('Stand-up Comedy', @events, 2),
+('Workshops', @events, 2),
+('Sports Matches', @events, 2);
+
+-- 5. SHOPPING DETAILS
+SET @shopping = 7;
+
+SET @clothing = (SELECT id FROM categories WHERE name='Clothing' AND parent_id=@shopping);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Men''s Wear', @clothing, 2),
+('Women''s Wear', @clothing, 2),
+('Kids'' Wear', @clothing, 2),
+('Winter Wear', @clothing, 2),
+('Sportswear', @clothing, 2),
+('Innerwear', @clothing, 2);
+
+SET @footwear = (SELECT id FROM categories WHERE name='Footwear' AND parent_id=@shopping);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Casual Shoes', @footwear, 2),
+('Formal Shoes', @footwear, 2),
+('Sports Shoes', @footwear, 2),
+('Slippers / Sandals', @footwear, 2);
+
+SET @accessories = (SELECT id FROM categories WHERE name='Accessories' AND parent_id=@shopping);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Bags / Wallets', @accessories, 2),
+('Watches', @accessories, 2),
+('Sunglasses', @accessories, 2),
+('Jewelry / Ornaments', @accessories, 2);
+
+SET @grooming = (SELECT id FROM categories WHERE name='Grooming' AND parent_id=@shopping);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Haircut / Salon', @grooming, 2),
+('Spa / Massage', @grooming, 2),
+('Manicure / Pedicure', @grooming, 2);
+
+-- 6. FINANCE DETAILS
+SET @finance = 8;
+-- Most finance categories (Loans, Investments) already have Level 2.
+-- Adding specific Taxes if needed
+SET @taxes = (SELECT id FROM categories WHERE name='Taxes' AND parent_id=@finance);
+INSERT INTO categories (name, parent_id, level) VALUES
+('Income Tax', @taxes, 2),
+('GST', @taxes, 2),
+('Professional Tax', @taxes, 2);
+
+-- 7. MISCELLANEOUS DETAILS
+SET @misc = 13;
+
+SET @gifts = (SELECT id FROM categories WHERE name='Gifts & Donations' AND parent_id=9);
+-- Note: Gifts is top Level 9, not under Misc (13) in this schema, but 'Miscellaneous' has 'Other Expenses'
+-- Seeding specific sub-items for Top Level 9 (Gifts)
+INSERT INTO categories (name, parent_id, level) VALUES
+('Wedding Gift', @gifts, 2),
+('Birthday Gift', @gifts, 2),
+('Anniversary Gift', @gifts, 2),
+('Rakhi / Festival Gift', @gifts, 2);
+
+-- Final reset
+ALTER TABLE categories AUTO_INCREMENT = 1;
+SELECT 'Full category seeding (Basic + Advanced) complete!' AS status;
+
+

@@ -51,7 +51,20 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "User registered successfully!"})
+	// Generate token for immediate login
+	token, err := utils.GenerateToken(user.ID, user.Email)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "User created but could not generate token"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "User registered successfully!",
+		"token":   token,
+		"id":      user.ID,
+		"email":   user.Email,
+		"name":    user.Name,
+	})
 }
 
 func Login(c *gin.Context) {
