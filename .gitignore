@@ -2,3 +2,4 @@ frontend/node_modules
 backend2/go.mod
 backend2/go.sum
 backend2/.env
+frontend/.env

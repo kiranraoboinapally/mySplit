@@ -7,64 +7,84 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/kiranraoboinapally/mySplit/backend/config"
+
+	appconfig "github.com/kiranraoboinapally/mySplit/backend/config"
 	"github.com/kiranraoboinapally/mySplit/backend/controllers"
 	"github.com/kiranraoboinapally/mySplit/backend/middleware"
 )
 
 func main() {
-	// Load .env file
-	godotenv.Load()
+	// Load .env ONLY for local development
+	if os.Getenv("RAILWAY_ENVIRONMENT") == "" {
+		_ = godotenv.Load()
+	}
 
-	// Connect to database
-	config.ConnectDatabase()
+	// Connect Database
+	appconfig.ConnectDatabase()
 
 	r := gin.Default()
 
-	// CORS configuration
-	config := cors.DefaultConfig()
-	config.AllowAllOrigins = true
-	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
-	r.Use(cors.New(config))
+	// CORS setup
+	corsConfig := cors.DefaultConfig()
 
-	// Public Routes
-	api := r.Group("/api")
-	{
-		auth := api.Group("/auth")
-		{
-			auth.POST("/signin", controllers.Login)
-			auth.POST("/signup", controllers.Register)
-		}
+	// Local + Vercel
+	corsConfig.AllowOrigins = []string{
+		"http://localhost:3000",
+		"https://mysplit-two.vercel.app/login",
 	}
 
-	// Protected Routes
+	corsConfig.AllowMethods = []string{
+		"GET", "POST", "PUT", "DELETE", "OPTIONS",
+	}
+
+	corsConfig.AllowHeaders = []string{
+		"Origin",
+		"Content-Type",
+		"Authorization",
+	}
+
+	r.Use(cors.New(corsConfig))
+
+	// API Routes
+	api := r.Group("/api")
+
+	// Health check
+	api.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{"status": "ok"})
+	})
+
+	// Public routes
+	auth := api.Group("/auth")
+	{
+		auth.POST("/signin", controllers.Login)
+		auth.POST("/signup", controllers.Register)
+	}
+
+	// Protected routes
 	protected := api.Group("/")
 	protected.Use(middleware.AuthMiddleware())
 	{
-		// Expenses
 		protected.GET("/expenses", controllers.GetExpenses)
 		protected.POST("/expenses", controllers.CreateExpense)
 		protected.DELETE("/expenses/:id", controllers.DeleteExpense)
 
-		// Categories
 		protected.GET("/categories", controllers.GetCategories)
 		protected.GET("/categories/tree", controllers.GetCategoryTree)
 		protected.GET("/categories/:id/children", controllers.GetCategoryChildren)
 		protected.POST("/categories", controllers.CreateCategory)
 
-		// Shared Expenses
 		protected.GET("/shared/owed", controllers.GetOwedByMe)
 		protected.GET("/shared/lended", controllers.GetLendedByMe)
 
-		// Analytics
 		protected.GET("/reports/spending", controllers.GetSpendingAnalysis)
 	}
 
+	// PORT handling (Railway compatible)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 
-	fmt.Printf("Server is running on port %s\n", port)
+	fmt.Println("🚀 Server running on port", port)
 	r.Run(":" + port)
 }

@@ -13,41 +13,38 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase() {
-	// Load from env or use defaults matching the existing Spring Boot app
+	// Read env vars (works locally + Railway)
 	dbUser := os.Getenv("DB_USER")
-	if dbUser == "" {
-		dbUser = "root"
-	}
 	dbPassword := os.Getenv("DB_PASSWORD")
-	if dbPassword == "" {
-		dbPassword = "root"
-	}
 	dbHost := os.Getenv("DB_HOST")
-	if dbHost == "" {
-		dbHost = "localhost"
-	}
 	dbPort := os.Getenv("DB_PORT")
-	if dbPort == "" {
-		dbPort = "3306"
-	}
 	dbName := os.Getenv("DB_NAME")
-	if dbName == "" {
-		dbName = "expense_tracker_db"
+
+	// Safety checks
+	if dbUser == "" || dbPassword == "" || dbHost == "" || dbPort == "" || dbName == "" {
+		log.Fatal("❌ Database environment variables are missing")
 	}
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUser, dbPassword, dbHost, dbPort, dbName)
+	dsn := fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		dbUser, dbPassword, dbHost, dbPort, dbName,
+	)
 
 	database, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Failed to connect to database: ", err)
+		log.Fatal("❌ Failed to connect to database:", err)
 	}
 
 	DB = database
-	fmt.Println("Database connection successfully established")
-	
-	// Auto Migrate - Order matters! Categories must exist before expenses
-	database.AutoMigrate(&models.User{})
-	database.AutoMigrate(&models.Category{})
-	database.AutoMigrate(&models.Expense{})
-	database.AutoMigrate(&models.SharedExpense{})
+	fmt.Println("✅ Database connected")
+
+	// Auto-migrate
+	if os.Getenv("RAILWAY_ENVIRONMENT") == "" {
+		database.AutoMigrate(
+			&models.User{},
+			&models.Category{},
+			&models.Expense{},
+			&models.SharedExpense{},
+		)
+	}
 }
