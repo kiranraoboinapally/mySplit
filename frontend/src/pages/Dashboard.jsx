@@ -21,7 +21,6 @@ const Dashboard = () => {
             navigate('/login');
             return;
         }
-
         loadData();
     }, [navigate]);
 
@@ -31,8 +30,8 @@ const Dashboard = () => {
                 ExpenseService.getAllExpenses(),
                 ExpenseService.getSpendingAnalysis()
             ]);
-            setExpenses(expRes.data);
-            setAnalysis(analysisRes.data);
+            setExpenses(expRes.data || []);
+            setAnalysis(analysisRes.data || {});
         } catch (error) {
             console.error("Error loading dashboard data", error);
             if (error.response && (error.response.status === 401 || error.response.status === 403)) {
@@ -54,17 +53,19 @@ const Dashboard = () => {
         navigate('/login');
     };
 
-    // Prepare chart data
-    const pieData = analysis ? Object.keys(analysis.byCategory).map(key => ({
-        name: key,
-        value: analysis.byCategory[key]
-    })) : [];
+    // Prepare pie chart data
+    const pieData = analysis?.byCategory
+        ? Object.keys(analysis.byCategory).map(key => ({
+            name: key,
+            value: analysis.byCategory[key]
+        }))
+        : [];
 
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('en-IN', {
             style: 'currency',
             currency: 'INR'
-        }).format(amount);
+        }).format(amount || 0);
     };
 
     return (
@@ -98,7 +99,7 @@ const Dashboard = () => {
                         </button>
                         <button
                             onClick={() => navigate('/profile')}
-                            className="flex items-center gap gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 hover:text-gray-900 rounded-xl font-medium transition-colors"
+                            className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 hover:text-gray-900 rounded-xl font-medium transition-colors"
                         >
                             <Wallet size={20} /> <span className="hidden md:block">Profile</span>
                         </button>
@@ -144,9 +145,8 @@ const Dashboard = () => {
                         <div className="relative z-10">
                             <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Spent (Month)</p>
                             <h3 className="text-3xl font-extrabold text-gray-900 mt-2">
-                                {formatCurrency(analysis ? analysis.totalSpent : 0)}
+                                {formatCurrency(analysis?.totalSpent)}
                             </h3>
-
                         </div>
                     </div>
 
@@ -173,7 +173,7 @@ const Dashboard = () => {
                         <h3 className="text-lg font-bold mb-6 text-gray-800">Spending Trend</h3>
                         <div className="h-72 w-full">
                             <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={analysis ? analysis.dailyTrend : []}>
+                                <AreaChart data={analysis?.dailyTrend || []}>
                                     <defs>
                                         <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
                                             <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
@@ -256,11 +256,11 @@ const Dashboard = () => {
                                         </td>
                                         <td className="p-4">
                                             <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                                                {exp.category ? exp.category.name : 'Uncategorized'}
+                                                {exp.category?.name || 'Uncategorized'}
                                             </span>
                                         </td>
                                         <td className="p-4 text-gray-500">
-                                            {new Date(exp.date).toLocaleDateString()}
+                                            {exp.date ? new Date(exp.date).toLocaleDateString() : '-'}
                                         </td>
                                         <td className="p-4 font-bold text-gray-900">
                                             {formatCurrency(exp.totalAmount)}

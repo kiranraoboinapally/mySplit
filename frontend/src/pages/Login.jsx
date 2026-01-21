@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ExpenseService from '../services/expenses';
 import { useNavigate } from 'react-router-dom';
 import { LogIn, ArrowRight, Loader } from 'lucide-react';
@@ -9,14 +9,20 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    // Redirect if user already logged in
+    useEffect(() => {
+        const user = localStorage.getItem('user');
+        if (user) navigate('/');
+    }, [navigate]);
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-        setError(''); // Clear error on input change
+        setError('');
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (loading) return; // Prevent multiple submissions
+        if (loading) return;
 
         setLoading(true);
         setError('');
@@ -24,7 +30,8 @@ const Login = () => {
         try {
             const res = await ExpenseService.login(formData.email, formData.password);
             localStorage.setItem('user', JSON.stringify(res.data));
-            navigate('/');
+            setLoading(false);
+            navigate('/'); // go to dashboard immediately
         } catch (err) {
             setLoading(false);
             setError(err.response?.data?.error || 'Invalid credentials. Please try again.');
@@ -33,14 +40,12 @@ const Login = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col md:flex-row">
-            {/* Left Side - Brand */}
+            {/* Left Side */}
             <div className="md:w-1/2 bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 flex flex-col justify-center items-center text-white p-12 text-center md:text-left relative overflow-hidden">
                 <div className="w-[600px] h-[600px] bg-white/10 rounded-full absolute -top-64 -left-64 blur-3xl animate-pulse"></div>
                 <div className="w-[400px] h-[400px] bg-fuchsia-500/20 rounded-full absolute -bottom-32 -right-32 blur-3xl"></div>
                 <div className="relative z-10 max-w-md">
-                    <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center text-violet-600 text-4xl font-extrabold mb-8 shadow-2xl mx-auto md:mx-0 transform hover:scale-110 transition-transform">
-                        ₹
-                    </div>
+                    <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center text-violet-600 text-4xl font-extrabold mb-8 shadow-2xl mx-auto md:mx-0 transform hover:scale-110 transition-transform">₹</div>
                     <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">Welcome Back!</h1>
                     <p className="text-xl md:text-2xl text-white/90 leading-relaxed">
                         Track every expense. Split every bill. Master your money.
@@ -56,7 +61,7 @@ const Login = () => {
                 </div>
             </div>
 
-            {/* Right Side - Form */}
+            {/* Right Side */}
             <div className="md:w-1/2 flex items-center justify-center p-8 lg:p-12 bg-white">
                 <div className="w-full max-w-md space-y-8">
                     <div className="text-center md:text-left">

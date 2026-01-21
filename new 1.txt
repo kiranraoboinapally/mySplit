@@ -686,3 +686,6 @@ INSERT INTO categories (name, parent_id, level) VALUES
 ('Seasonal / Festival Items', @special, 1);
 
 ---
+
+
+
