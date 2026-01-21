@@ -12,13 +12,20 @@ import (
 
 var DB *gorm.DB
 
+func getEnv(key, fallback string) string {
+	if val := os.Getenv(key); val != "" {
+		return val
+	}
+	return fallback
+}
+
 func ConnectDatabase() {
 	// Read env vars (works locally + Railway)
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbName := os.Getenv("DB_NAME")
+	dbUser := getEnv("DB_USER", os.Getenv("MYSQLUSER"))
+	dbPassword := getEnv("DB_PASSWORD", os.Getenv("MYSQLPASSWORD"))
+	dbHost := getEnv("DB_HOST", os.Getenv("MYSQLHOST"))
+	dbPort := getEnv("DB_PORT", os.Getenv("MYSQLPORT"))
+	dbName := getEnv("DB_NAME", os.Getenv("MYSQLDATABASE"))
 
 	// Safety checks
 	if dbUser == "" || dbPassword == "" || dbHost == "" || dbPort == "" || dbName == "" {
@@ -38,7 +45,7 @@ func ConnectDatabase() {
 	DB = database
 	fmt.Println("✅ Database connected")
 
-	// Auto-migrate
+	// Auto-migrate only in local
 	if os.Getenv("RAILWAY_ENVIRONMENT") == "" {
 		database.AutoMigrate(
 			&models.User{},
