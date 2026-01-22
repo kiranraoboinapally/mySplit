@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import ExpenseService from '../services/expenses';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell
 } from 'recharts';
@@ -11,18 +12,14 @@ import {
 const COLORS = ['#8b5cf6', '#ec4899', '#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
 
 const Dashboard = () => {
+    const { logout } = useContext(AuthContext);
     const [expenses, setExpenses] = useState([]);
     const [analysis, setAnalysis] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const user = localStorage.getItem('user');
-        if (!user) {
-            navigate('/login');
-            return;
-        }
         loadData();
-    }, [navigate]);
+    }, []);
 
     const loadData = async () => {
         try {
@@ -35,7 +32,7 @@ const Dashboard = () => {
         } catch (error) {
             console.error("Error loading dashboard data", error);
             if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                localStorage.removeItem('user');
+                logout();
                 navigate('/login');
             }
         }
@@ -49,8 +46,7 @@ const Dashboard = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('user');
-        navigate('/login');
+        logout();
     };
 
     // Prepare pie chart data

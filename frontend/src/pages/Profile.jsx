@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, User, Mail, LogOut, Download, Shield } from 'lucide-react';
+import { AuthContext } from '../context/AuthContext';
 
 const Profile = () => {
     const navigate = useNavigate();
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const { user, logout } = useContext(AuthContext);
 
     const handleLogout = () => {
-        localStorage.removeItem('user');
-        navigate('/login');
+        logout();
     };
 
     const handleExport = () => {

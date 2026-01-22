@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import ExpenseService from '../services/expenses';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogIn, ArrowRight, Loader } from 'lucide-react';
+import { AuthContext } from '../context/AuthContext';
 
 const Login = () => {
     const navigate = useNavigate();
+    const { login, user } = useContext(AuthContext);
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
     // Redirect if user already logged in
     useEffect(() => {
-        const user = localStorage.getItem('user');
         if (user) navigate('/');
-    }, [navigate]);
+    }, [user, navigate]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -28,8 +28,7 @@ const Login = () => {
         setError('');
 
         try {
-            const res = await ExpenseService.login(formData.email, formData.password);
-            localStorage.setItem('user', JSON.stringify(res.data));
+            await login(formData.email, formData.password);
             setLoading(false);
             navigate('/'); // go to dashboard immediately
         } catch (err) {

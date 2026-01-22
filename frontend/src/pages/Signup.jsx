@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import ExpenseService from '../services/expenses';
 import { useNavigate } from 'react-router-dom';
 import { UserPlus, ArrowRight } from 'lucide-react';
+import { AuthContext } from '../context/AuthContext';
 
 const Signup = () => {
     const navigate = useNavigate();
+    const { user } = useContext(AuthContext);
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        if (user) navigate('/');
+    }, [user, navigate]);
 
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
