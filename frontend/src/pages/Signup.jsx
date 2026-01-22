@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import ExpenseService from '../services/expenses';
 import { useNavigate } from 'react-router-dom';
-import { UserPlus, ArrowRight } from 'lucide-react';
+import { UserPlus, ArrowRight, CheckCircle, Loader } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 
 const Signup = () => {
@@ -9,6 +9,8 @@ const Signup = () => {
     const { user } = useContext(AuthContext);
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (user) navigate('/');
@@ -19,11 +21,19 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setSuccess('');
+        setLoading(true);
+
         try {
             await ExpenseService.signup(formData.name, formData.email, formData.password);
-            navigate('/login');
+            setSuccess('Account created successfully! Redirecting to login...');
+            setLoading(false);
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000);
         } catch (err) {
-            setError(err.response?.data?.error || 'Signup failed');
+            setLoading(false);
+            setError(err.response?.data?.error || 'Signup failed. Please try again.');
         }
     };
 
@@ -52,8 +62,14 @@ const Signup = () => {
                     </div>
 
                     {error && (
-                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm animate-pulse">
                             {error}
+                        </div>
+                    )}
+
+                    {success && (
+                        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm flex items-center gap-2 animate-bounce">
+                            <CheckCircle size={18} /> {success}
                         </div>
                     )}
 
@@ -101,10 +117,23 @@ const Signup = () => {
 
                         <button
                             type="submit"
-                            className="w-full bg-gray-900 text-white font-bold py-4 rounded-xl shadow-xl hover:bg-gray-800 hover:scale-[1.02] transform transition-all flex items-center justify-center gap-2 group"
+                            disabled={loading || success}
+                            className="w-full bg-gray-900 text-white font-bold py-4 rounded-xl shadow-xl hover:bg-gray-800 hover:scale-[1.02] transform transition-all flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
                         >
-                            <UserPlus size={20} /> Create Account
-                            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                            {loading ? (
+                                <>
+                                    <Loader size={20} className="animate-spin" /> Creating Account...
+                                </>
+                            ) : success ? (
+                                <>
+                                    <CheckCircle size={20} /> Success!
+                                </>
+                            ) : (
+                                <>
+                                    <UserPlus size={20} /> Create Account
+                                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                                </>
+                            )}
                         </button>
                     </form>
 
