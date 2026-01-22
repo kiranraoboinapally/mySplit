@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
@@ -10,37 +11,40 @@ import PrivateRoute from './components/PrivateRoute';
 
 function App() {
     return (
-        <Router>
-            <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/" element={
-                    <PrivateRoute>
-                        <Dashboard />
-                    </PrivateRoute>
-                } />
-                <Route path="/add-expense" element={
-                    <PrivateRoute>
-                        <AddExpense />
-                    </PrivateRoute>
-                } />
-                <Route path="/shared" element={
-                    <PrivateRoute>
-                        <SharedExpenses />
-                    </PrivateRoute>
-                } />
-                <Route path="/categories" element={
-                    <PrivateRoute>
-                        <Categories />
-                    </PrivateRoute>
-                } />
-                <Route path="/profile" element={
-                    <PrivateRoute>
-                        <Profile />
-                    </PrivateRoute>
-                } />
-            </Routes>
-        </Router>
+        <>
+            <Router>
+                <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route path="/" element={
+                        <PrivateRoute>
+                            <Dashboard />
+                        </PrivateRoute>
+                    } />
+                    <Route path="/add-expense" element={
+                        <PrivateRoute>
+                            <AddExpense />
+                        </PrivateRoute>
+                    } />
+                    <Route path="/shared" element={
+                        <PrivateRoute>
+                            <SharedExpenses />
+                        </PrivateRoute>
+                    } />
+                    <Route path="/categories" element={
+                        <PrivateRoute>
+                            <Categories />
+                        </PrivateRoute>
+                    } />
+                    <Route path="/profile" element={
+                        <PrivateRoute>
+                            <Profile />
+                        </PrivateRoute>
+                    } />
+                </Routes>
+            </Router>
+            <SpeedInsights />
+        </>
     );
 }
 
